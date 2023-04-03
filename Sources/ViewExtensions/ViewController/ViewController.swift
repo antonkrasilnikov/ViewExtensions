@@ -20,7 +20,9 @@ open class ViewController: UIViewController,UserInterface {
     }
     
     deinit {
+        #if DEBUG
         print("deinit",NSStringFromClass(type(of: self)))
+        #endif
     }
     
     open override func viewDidLoad() {

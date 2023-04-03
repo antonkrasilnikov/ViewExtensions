@@ -1,35 +1,6 @@
 import Foundation
 import UIKit
 
-open class LoadControl: View {
-    
-    let activity = UIActivityIndicatorView()
-
-    public var color: UIColor? {
-        didSet {
-            activity.color = color
-        }
-    }
-    
-    open override func setup() {
-        activity.hidesWhenStopped = true
-        addSubview(activity)
-        activity.style = .white
-    }
-    
-    open override func setupSizes() {
-        activity.autoCenterInSuperview()
-    }
-    
-    open func start() {
-        activity.startAnimating()
-    }
-    
-    open func stop() {
-        activity.stopAnimating()
-    }
-}
-
 open class Button: View {
     
     public lazy var actionControl: LoadControl = { [unowned self] actionControl in
