@@ -114,7 +114,7 @@ public extension UIView {
     
 }
 
-extension CGRect {
+public extension CGRect {
 
     /// Initializes a new CGRect with a center point and size.
     init(center: CGPoint, size: CGSize) {
