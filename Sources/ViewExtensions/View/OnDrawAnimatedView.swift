@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import Timers
 
 open class OnDrawAnimatedView: View {
     private var completion: (() -> Void)?
@@ -30,7 +31,7 @@ open class OnDrawAnimatedView: View {
     
     private func animate() {
         
-        startTs = INCR_UISystemUptime.uptime()
+        startTs = INC_SystemUptime.uptime()
         
         addLink()
     }
@@ -52,7 +53,7 @@ open class OnDrawAnimatedView: View {
     @objc private func displayLinkAction() {
         var shouldStop = true
         if let startTs = startTs, duration > 0 {
-            let ts = INCR_UISystemUptime.uptime()
+            let ts = INC_SystemUptime.uptime()
             var progress = (ts - startTs)/duration
             progress = progress > 1 ? 1 : progress
             progress = progress < 0 ? 0 : progress

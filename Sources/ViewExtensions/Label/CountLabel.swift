@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import Timers
 
 open class CountLabel: UILabel {
     private var startValue: Int = 0
@@ -32,7 +33,7 @@ open class CountLabel: UILabel {
     
     private func animate() {
         
-        startTs = INCR_UISystemUptime.uptime()
+        startTs = INC_SystemUptime.uptime()
         
         addLink()
     }
@@ -54,7 +55,7 @@ open class CountLabel: UILabel {
     @objc private func displayLinkAction() {
         var shouldStop = true
         if let startTs = startTs, duration > 0, startValue != finalValue {
-            let ts = INCR_UISystemUptime.uptime()
+            let ts = INC_SystemUptime.uptime()
             var progress = (ts - startTs)/duration
             progress = progress > 1 ? 1 : progress
             progress = progress < 0 ? 0 : progress

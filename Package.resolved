@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "INCTimers",
+        "repositoryURL": "https://github.com/antonkrasilnikov/INCTimers.git",
+        "state": {
+          "branch": null,
+          "revision": "4c14b703bfcc5b35d24a0bcc43b9843476c819ad",
+          "version": "1.0.1"
+        }
+      },
+      {
+        "package": "WeakRef",
+        "repositoryURL": "https://github.com/antonkrasilnikov/WeakReference.git",
+        "state": {
+          "branch": null,
+          "revision": "059a61f8a5dd411edeb069c12a6cb0a774516e5c",
+          "version": "1.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

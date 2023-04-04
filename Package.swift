@@ -13,13 +13,15 @@ let package = Package(
             name: "ViewExtensions",
             targets: ["PureLayout", "ViewExtensions"]),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/antonkrasilnikov/INCTimers.git", from: "1.0.1"),
+    ],
     targets: [
         .target(
             name: "PureLayout",
             dependencies: []),
         .target(
             name: "ViewExtensions",
-            dependencies: ["PureLayout"]),
+            dependencies: ["PureLayout", .product(name: "INCTimers", package: "INCTimers")]),
     ]
 )

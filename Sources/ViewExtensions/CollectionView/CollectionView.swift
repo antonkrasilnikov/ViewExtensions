@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import Timers
 
 open class CollectionViewCellItem {
     public let reuseIdentifier: String
@@ -133,7 +134,7 @@ open class CollectionView: UICollectionView {
 
     @objc
     private func _throttledReloadData() {
-        let currentTS = INCR_UISystemUptime.uptime()
+        let currentTS = INC_SystemUptime.uptime()
         if currentTS >= _nextPossibleReloadTS {
             _nextPossibleReloadTS = currentTS + _reloadDelay
 

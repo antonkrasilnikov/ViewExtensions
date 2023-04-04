@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import Timers
 
 open class CountdownLabel: UILabel {
     
@@ -34,7 +35,7 @@ open class CountdownLabel: UILabel {
     
     private func animate() {
         
-        startTs = INCR_UISystemUptime.uptime()
+        startTs = INC_SystemUptime.uptime()
         
         addLink()
     }
@@ -56,7 +57,7 @@ open class CountdownLabel: UILabel {
     @objc private func displayLinkAction() {
         var shouldStop = true
         if let startTs = startTs {
-            let ts = INCR_UISystemUptime.uptime()
+            let ts = INC_SystemUptime.uptime()
             currentValue = startValue - Int(floor(ts - startTs))
             
             shouldStop = currentValue <= 0

@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-//@_exported import PureLayout
+import Timers
 
 
 open class TableViewCellItem {
@@ -113,7 +113,7 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource {
 
     @objc
     private func _throttledReloadData() {
-        let currentTS = INCR_UISystemUptime.uptime()
+        let currentTS = INC_SystemUptime.uptime()
         if currentTS >= _nextPossibleReloadTS {
             _nextPossibleReloadTS = currentTS + _reloadDelay
 
