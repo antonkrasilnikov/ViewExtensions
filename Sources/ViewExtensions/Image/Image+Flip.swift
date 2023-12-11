@@ -5,6 +5,8 @@ public extension UIImage {
     
     var flippedHorizontaly: UIImage {
         
+        guard size.width > 0, size.height > 0 else { return self }
+
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         defer {
             UIGraphicsEndImageContext()
@@ -22,6 +24,8 @@ public extension UIImage {
     
     var flippedVerticaly: UIImage {
         
+        guard size.width > 0, size.height > 0 else { return self }
+
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         defer {
             UIGraphicsEndImageContext()
@@ -41,6 +45,8 @@ public extension UIImage {
     
     var rotatedCounterClockwise: UIImage {
         
+        guard size.width > 0, size.height > 0 else { return self }
+
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         defer {
             UIGraphicsEndImageContext()
@@ -61,6 +67,8 @@ public extension UIImage {
     
     var rotatedClockwise: UIImage {
         
+        guard size.width > 0, size.height > 0 else { return self }
+
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
         defer {
             UIGraphicsEndImageContext()

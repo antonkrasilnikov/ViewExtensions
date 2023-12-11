@@ -10,6 +10,7 @@ public enum ColorGradientDimension {
 
 public extension UIColor {
     static func gradientColor(colors: [UIColor], size: CGSize, dimension: ColorGradientDimension) -> UIColor? {
+        guard size.width > 0, size.height > 0 else { return nil }
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         let context = UIGraphicsGetCurrentContext()
         let colorspace = CGColorSpaceCreateDeviceRGB()

@@ -68,11 +68,12 @@ open class View: UIControl, UserInterface {
 public extension UIView {
 
     func snapshot(scale: CGFloat = 0, isOpaque: Bool = false, afterScreenUpdates: Bool = true) -> UIImage? {
-       UIGraphicsBeginImageContextWithOptions(bounds.size, isOpaque, scale)
-       drawHierarchy(in: bounds, afterScreenUpdates: afterScreenUpdates)
-       let image = UIGraphicsGetImageFromCurrentImageContext()
-       UIGraphicsEndImageContext()
-       return image
+        guard bounds.size.width > 0, bounds.size.height > 0 else { return nil }
+        UIGraphicsBeginImageContextWithOptions(bounds.size, isOpaque, scale)
+        drawHierarchy(in: bounds, afterScreenUpdates: afterScreenUpdates)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
     }
 }
 
