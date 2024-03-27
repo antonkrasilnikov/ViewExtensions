@@ -1,25 +1,30 @@
 import UIKit
 
 public extension UIColor {
-    static func colorFromHEX(hex:UInt) -> UIColor {
-        
+
+    convenience init(hex: UInt) {
         let red = CGFloat((hex & 0xFF0000) >> 16)/255.0
         let green = CGFloat((hex & 0x00FF00) >>  8)/255.0
         let blue = CGFloat((hex & 0x0000FF) >>  0)/255.0
-        
-        return UIColor.init(red: red, green: green, blue: blue, alpha: 1)
+        self.init(red: red, green: green, blue: blue, alpha: 1)
+    }
+
+    convenience init(hex: String) {
+        let scanner = Scanner(string: hex)
+        scanner.charactersToBeSkipped = CharacterSet.alphanumerics.inverted
+
+        var rgbValue:UInt64 = 0
+        scanner.scanHexInt64(&rgbValue)
+        self.init(hex: UInt(rgbValue))
+    }
+
+    static func colorFromHEX(hex:UInt) -> UIColor {
+        .init(hex: hex)
     }
     
     static func colorFromHEX(string: String) -> UIColor {
-        let scanner = Scanner(string: string)
-        scanner.charactersToBeSkipped = CharacterSet.alphanumerics.inverted
-        
-        var rgbValue:UInt64 = 0
-        scanner.scanHexInt64(&rgbValue)
-        
-        return colorFromHEX(hex: UInt(rgbValue))
+        .init(hex: string)
     }
-
     
     var hex: String {
         var r: CGFloat = 0
