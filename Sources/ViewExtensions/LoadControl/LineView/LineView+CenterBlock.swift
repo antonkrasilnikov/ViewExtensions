@@ -23,7 +23,7 @@ extension LoadControl.LineAnimatedView {
                                                                             times: [0, 0.25, 0.6, 0.75, 1],
                                                                             duration: duration,
                                                                             repeatCount: .infinity,
-                                                                            timingFunction: .linear)
+                                                                            timingFunctionName: .linear)
             Animation.animate(caAnimation: transformAnimation, layer: layer, key: "transormAnimation")
         }
 

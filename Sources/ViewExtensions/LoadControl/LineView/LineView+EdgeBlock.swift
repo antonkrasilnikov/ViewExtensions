@@ -25,7 +25,7 @@ extension LoadControl.LineAnimatedView {
                                                                                      CATransform3DScale(layer.transform, 1, 1, 1)],
                                                                             times: keyTimes,
                                                                             duration: duration,
-                                                                            timingFunction: .easeOut)
+                                                                            timingFunctionName: .easeOut)
 
             let moveAnimation = CAKeyframeAnimation(keyPath: "position.x")
             moveAnimation.keyTimes = keyTimes
