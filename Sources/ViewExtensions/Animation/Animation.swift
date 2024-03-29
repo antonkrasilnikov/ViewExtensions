@@ -431,7 +431,7 @@ public class KeyFrameAnimation: NSObject {
         timingFunctions ?? ( timingFunctionName != nil ? [.init(name: timingFunctionName!)] : nil)
     }
 
-    class func addOpacityAnimation(view: UIView,
+    public class func addOpacityAnimation(view: UIView,
                                    values: [CGFloat],
                                    times: [TimeInterval]? = nil,
                                    timingFunctionName: CAMediaTimingFunctionName? = nil,
