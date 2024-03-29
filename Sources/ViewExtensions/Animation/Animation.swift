@@ -331,15 +331,15 @@ open class Animation: NSObject,CAAnimationDelegate  {
     }
 }
 
-class KeyFrameAnimation: NSObject {
+public class KeyFrameAnimation: NSObject {
 
-    enum VerticalAlign {
+    public enum VerticalAlign {
         case center
         case top
         case bottom
     }
 
-    enum HorizontalAlign {
+    public enum HorizontalAlign {
         case center
         case left
         case right
@@ -423,7 +423,7 @@ class KeyFrameAnimation: NSObject {
         }
     }
 
-    class func animate(withDuration duration: TimeInterval, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+    public class func animate(withDuration duration: TimeInterval, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
         _ = KeyFrameAnimation(withDuration: duration, animations: animations, completion: completion)
     }
 
@@ -444,7 +444,7 @@ class KeyFrameAnimation: NSObject {
                                                                                                                       timingFunctions: timingFunctions))))
     }
 
-    class func addScaleAnimation(view: UIView,
+    public class func addScaleAnimation(view: UIView,
                                  values: [CGFloat],
                                  times: [TimeInterval]? = nil,
                                  timingFunctionName: CAMediaTimingFunctionName? = nil,
@@ -457,7 +457,7 @@ class KeyFrameAnimation: NSObject {
                                                                                                                       timingFunctions: timingFunctions))))
     }
 
-    class func addScaleXAnimation(view: UIView,
+    public class func addScaleXAnimation(view: UIView,
                                  values: [CGFloat],
                                  times: [TimeInterval]? = nil,
                                  align: HorizontalAlign = .center,
@@ -470,7 +470,7 @@ class KeyFrameAnimation: NSObject {
                                    timingFunctions: timingFunctions)
     }
 
-    class func addScaleYAnimation(view: UIView,
+    public class func addScaleYAnimation(view: UIView,
                                  values: [CGFloat],
                                  times: [TimeInterval]? = nil,
                                  align: VerticalAlign = .center,
@@ -483,7 +483,7 @@ class KeyFrameAnimation: NSObject {
                                    timingFunctions: timingFunctions)
     }
 
-    class func addTranslateXAnimation(view: UIView,
+    public class func addTranslateXAnimation(view: UIView,
                                       values: [CGFloat],
                                       times: [TimeInterval]? = nil,
                                       timingFunctionName: CAMediaTimingFunctionName? = nil,
@@ -496,7 +496,7 @@ class KeyFrameAnimation: NSObject {
                                                                                                                       timingFunctions: timingFunctions))))
     }
 
-    class func addTranslateYAnimation(view: UIView,
+    public class func addTranslateYAnimation(view: UIView,
                                       values: [CGFloat],
                                       times: [TimeInterval]? = nil,
                                       timingFunctionName: CAMediaTimingFunctionName? = nil,
@@ -509,7 +509,7 @@ class KeyFrameAnimation: NSObject {
                                                                                                                       timingFunctions: timingFunctions))))
     }
 
-    class func addRotateAnimation(view: UIView,
+    public class func addRotateAnimation(view: UIView,
                                   values: [CGFloat],
                                   times: [TimeInterval]? = nil,
                                   timingFunctionName: CAMediaTimingFunctionName? = nil,
@@ -522,7 +522,7 @@ class KeyFrameAnimation: NSObject {
                                                                                                                       timingFunctions: timingFunctions))))
     }
 
-    class func addTransformAnimation(view: UIView,
+    public class func addTransformAnimation(view: UIView,
                                      values: [CATransform3D],
                                      times: [TimeInterval]? = nil,
                                      timingFunctionName: CAMediaTimingFunctionName? = nil,
@@ -535,7 +535,7 @@ class KeyFrameAnimation: NSObject {
                                                                                                                       timingFunctions: timingFunctions))))
     }
 
-    class func addPathAnimation(view: UIView,
+    public class func addPathAnimation(view: UIView,
                                 values: [CGPath],
                                 times: [TimeInterval]? = nil,
                                 timingFunctionName: CAMediaTimingFunctionName? = nil,
@@ -543,7 +543,7 @@ class KeyFrameAnimation: NSObject {
         addPathAnimation(layer: view.layer, values: values, times: times, timingFunctionName: timingFunctionName, timingFunctions: timingFunctions)
     }
 
-    class func addPathAnimation(layer: CALayer,
+    public class func addPathAnimation(layer: CALayer,
                                 values: [CGPath],
                                 times: [TimeInterval]? = nil,
                                 timingFunctionName: CAMediaTimingFunctionName? = nil,
@@ -557,7 +557,7 @@ class KeyFrameAnimation: NSObject {
                                                                       timingFunctions: timingFunctions))))
     }
 
-    class func addStrokeColorAnimation(view: UIView,
+    public class func addStrokeColorAnimation(view: UIView,
                                      values: [CGColor],
                                      times: [TimeInterval]? = nil,
                                      timingFunctionName: CAMediaTimingFunctionName? = nil,
@@ -565,7 +565,7 @@ class KeyFrameAnimation: NSObject {
         addStrokeColorAnimation(layer: view.layer, values: values, times: times, timingFunctionName: timingFunctionName, timingFunctions: timingFunctions)
     }
 
-    class func addStrokeColorAnimation(layer: CALayer,
+    public class func addStrokeColorAnimation(layer: CALayer,
                                      values: [CGColor],
                                      times: [TimeInterval]? = nil,
                                      timingFunctionName: CAMediaTimingFunctionName? = nil,
@@ -579,7 +579,7 @@ class KeyFrameAnimation: NSObject {
                                                                       timingFunctions: timingFunctions))))
     }
 
-    class func addLineWidthAnimation(view: UIView,
+    public class func addLineWidthAnimation(view: UIView,
                                      values: [CGFloat],
                                      times: [TimeInterval]? = nil,
                                      timingFunctionName: CAMediaTimingFunctionName? = nil,
@@ -587,7 +587,7 @@ class KeyFrameAnimation: NSObject {
         addLineWidthAnimation(layer: view.layer, values: values, times: times, timingFunctionName: timingFunctionName, timingFunctions: timingFunctions)
     }
 
-    class func addLineWidthAnimation(layer: CALayer,
+    public class func addLineWidthAnimation(layer: CALayer,
                                      values: [CGFloat],
                                      times: [TimeInterval]? = nil,
                                      timingFunctionName: CAMediaTimingFunctionName? = nil,
@@ -601,7 +601,7 @@ class KeyFrameAnimation: NSObject {
                                                                       timingFunctions: timingFunctions))))
     }
 
-    class func addStrokeEndAnimation(view: UIView,
+    public class func addStrokeEndAnimation(view: UIView,
                                      values: [CGFloat],
                                      times: [TimeInterval]? = nil,
                                      timingFunctionName: CAMediaTimingFunctionName? = nil,
@@ -609,7 +609,7 @@ class KeyFrameAnimation: NSObject {
         addStrokeEndAnimation(layer: view.layer, values: values, times: times, timingFunctionName: timingFunctionName, timingFunctions: timingFunctions)
     }
 
-    class func addStrokeEndAnimation(layer: CALayer,
+    public class func addStrokeEndAnimation(layer: CALayer,
                                      values: [CGFloat],
                                      times: [TimeInterval]? = nil,
                                      timingFunctionName: CAMediaTimingFunctionName? = nil,
