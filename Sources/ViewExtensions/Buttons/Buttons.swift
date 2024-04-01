@@ -27,6 +27,21 @@ open class Button: View, LoadibleUIControl {
             self.alpha = 0.5
         }
     }
+
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.alpha = 0.5
+        super.touchesBegan(touches, with: event)
+    }
+
+    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.alpha = 1
+        super.touchesEnded(touches, with: event)
+    }
+
+    public override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.alpha = 1
+        super.touchesCancelled(touches, with: event)
+    }
 }
 
 public class DetailButton: Button {
