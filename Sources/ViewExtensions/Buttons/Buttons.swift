@@ -1,26 +1,11 @@
 import Foundation
 import UIKit
 
-open class Button: View {
-    
-    public lazy var actionControl: LoadControl = { [unowned self] actionControl in
-        addSubview(actionControl)
-        actionControl.autoCenterInSuperview()
-        return actionControl
-    }(LoadControl())
+open class Button: View, LoadibleUIControl {
     
     public var isInAction: Bool = false {
         didSet {
-            if self.isInAction {
-                self.isUserInteractionEnabled = false
-                actionControl.isHidden = false
-                actionControl.start()
-            }else{
-                self.isUserInteractionEnabled = true
-                actionControl.isHidden = true
-                actionControl.stop()
-            }
-            updateColors()
+            show(isLoading: isInAction)
         }
     }
     
@@ -36,26 +21,11 @@ open class Button: View {
     }
     
     private func updateColors() {
-        if self.isEnabled && !self.isInAction {
+        if self.isEnabled {
             self.alpha = 1
         }else{
             self.alpha = 0.5
         }
-    }
-    
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.alpha = 0.5
-        super.touchesBegan(touches, with: event)
-    }
-    
-    public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.alpha = 1
-        super.touchesEnded(touches, with: event)
-    }
-    
-    public override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.alpha = 1
-        super.touchesCancelled(touches, with: event)
     }
 }
 
@@ -87,5 +57,72 @@ public class DetailButton: Button {
         path.addLine(to: .init(x: 0, y: bounds.height))
         
         shapeLayer.path = path.cgPath
+    }
+}
+
+public protocol LoadibleUIControl: UIView {
+    func show(isLoading: Bool)
+}
+
+private class LoadibleUIMaskView: View {
+
+    static let loadibleTag = 1764
+
+    let backView = UIView()
+    let control = LoadControl(animationType: .line)
+
+    override func setup() {
+        super.setup()
+
+        tag = Self.loadibleTag
+
+        addSubview(backView)
+        backView.backgroundColor = .init(white: 0, alpha: 0.5)
+
+        addSubview(control)
+    }
+
+    override func setupSizes() {
+        super.setupSizes()
+
+        backView.autoPinEdgesToSuperviewEdges()
+        control.autoCenterInSuperview()
+    }
+
+    func show(isLoading: Bool) {
+        if isLoading {
+            isHidden = true
+            if let snapshot = superview?.snapshotView(afterScreenUpdates: true) {
+                snapshot.frame = bounds
+                backView.mask = snapshot
+            }
+            isHidden = false
+            control.start()
+        }else{
+            isHidden = true
+            control.stop()
+        }
+    }
+}
+
+extension LoadibleUIControl {
+
+    private func _loadibleMaskView() -> LoadibleUIMaskView {
+
+        if let control = subviews.first(where: { $0.tag == LoadibleUIMaskView.loadibleTag }) as? LoadibleUIMaskView {
+            bringSubviewToFront(control)
+            return control
+        }
+
+        let control = LoadibleUIMaskView()
+        addSubview(control)
+        control.autoPinEdgesToSuperviewEdges()
+
+        return control
+
+    }
+
+    public func show(isLoading: Bool) {
+        _loadibleMaskView().show(isLoading: isLoading)
     }
 }
