@@ -31,7 +31,7 @@ open class AlertPopover: View {
         layer.cornerRadius = 5
 
         addSubview(label)
-
+        label.numberOfLines = 0
         label.textColor = textColor
         label.font = font
     }
