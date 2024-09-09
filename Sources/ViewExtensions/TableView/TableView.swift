@@ -104,7 +104,7 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource {
         self.sections = sections
     }
 
-    public var selectionSound: ControlInteractionSound?
+    public var selectionSound: ControlInteractionSound? = UISoundDefault.tap
 
     private var _frizeSections: [TableViewSection] = []
     private var _nextPossibleReloadTS: TimeInterval = 0

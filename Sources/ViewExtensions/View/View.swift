@@ -10,7 +10,7 @@ open class View: UIControl, UserInterface {
 
     private var sizeSet: Bool = false
 
-    public var tapSound: ControlInteractionSound?
+    public var tapSound: ControlInteractionSound? = UISoundDefault.tap
 
     public override init(frame: CGRect) {
         super.init(frame: frame)

@@ -126,7 +126,7 @@ open class CollectionView: UICollectionView {
         }
     }
 
-    public var selectionSound: ControlInteractionSound?
+    public var selectionSound: ControlInteractionSound? = UISoundDefault.tap
 
     private var _frizeSections: [CollectionViewSection] = []
     private var _nextPossibleReloadTS: TimeInterval = 0

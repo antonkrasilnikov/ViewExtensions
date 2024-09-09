@@ -11,3 +11,7 @@ public protocol ControlInteractionSound {
     static var none: Self { get }
     func play()
 }
+
+public struct UISoundDefault {
+    public static var tap: ControlInteractionSound?
+}
