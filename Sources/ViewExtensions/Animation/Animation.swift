@@ -350,9 +350,17 @@ public class KeyFrameAnimation: NSObject {
         let model: CAAnimation.WBWKeyFrameAnimationModel
     }
 
+    private struct KeyframeTimePerform {
+        let time: TimeInterval
+        let action: () -> Void
+        let syncView: UIView
+    }
+
     private var completionHandler: ((Bool) -> Void)?
     private var keyFrames: [KeyFrame]
+    private var keyFramePerforms: [KeyframeTimePerform]
     private static var keyFramesBuffer: [KeyFrame] = []
+    private static var keyFramesPerformsBuffer: [KeyframeTimePerform] = []
     private var group = DispatchGroup()
     private var animationCompleteFlag = true
 
@@ -361,14 +369,19 @@ public class KeyFrameAnimation: NSObject {
         self.completionHandler = completion
 
         Self.keyFramesBuffer.removeAll()
+        Self.keyFramesPerformsBuffer.removeAll()
 
         animations()
 
         self.keyFrames = Self.keyFramesBuffer
+        self.keyFramePerforms = Self.keyFramesPerformsBuffer
 
         Self.keyFramesBuffer.removeAll()
+        Self.keyFramesPerformsBuffer.removeAll()
 
         super.init()
+
+        var performViews: [UIView] = []
 
         CATransaction.begin()
 
@@ -380,9 +393,26 @@ public class KeyFrameAnimation: NSObject {
             })
         }
 
+        keyFramePerforms.forEach { perform in
+            group.enter()
+
+            Animation.animate(caAnimation: .opacityAnimation(values: [0,1], duration: perform.time*duration),
+                              layer: {
+                $0.frame = .init(origin: .zero, size: .init(width: 1, height: 1))
+                $0.isUserInteractionEnabled = false
+                perform.syncView.addSubview($0)
+                performViews.append($0)
+                return $0
+            }(UIView()).layer) { _ in
+                perform.action()
+                self.group.leave()
+            }
+        }
+
         CATransaction.commit()
 
         group.notify(queue: .main) {
+            performViews.forEach({ $0.removeFromSuperview() })
             if let completionHandler = self.completionHandler {
                 self.completionHandler = nil
                 completionHandler(self.animationCompleteFlag)
@@ -623,4 +653,7 @@ public class KeyFrameAnimation: NSObject {
                                                                       timingFunctions: timingFunctions))))
     }
 
+    public class func addPerform(time: TimeInterval, over view: UIView, action: @escaping () -> Void) {
+        Self.keyFramesPerformsBuffer.append(.init(time: time, action: action, syncView: view))
+    }
 }
