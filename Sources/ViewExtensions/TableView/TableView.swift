@@ -199,7 +199,7 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource {
         return section.items[indexPath.row]
     }
 
-    var isKeyboardSizeSensitive = true
+    public var isKeyboardSizeSensitive = true
 
     public required init?(coder aDecoder: NSCoder) {
         fatalError()
@@ -363,10 +363,11 @@ extension TableView {
             let keyboardRect = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
             let curve = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int,
             let animationDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval,
-            let window = self.window
+            let window = self.window,
+            let superview = self.superview
             else { return }
 
-        var h = bounds.height - convert(keyboardRect, from: window).origin.y
+        var h = superview.bounds.height - superview.convert(keyboardRect, from: window).origin.y
 
         h = h > 0 ? h : 0
 
@@ -374,7 +375,11 @@ extension TableView {
         UIView.animate(withDuration: animationDuration, delay: 0, options: UIView.AnimationOptions(rawValue: UIView.AnimationOptions.RawValue(curve << 16)), animations: {
             self.layoutIfNeeded()
             self.contentInset.bottom = h
-            self.scrollIndicatorInsets.bottom = h
+            if #available(iOS 13, *) {
+                self.verticalScrollIndicatorInsets.bottom = h
+            }else{
+                self.scrollIndicatorInsets.bottom = h
+            }
 
         }) { (_) in
 
