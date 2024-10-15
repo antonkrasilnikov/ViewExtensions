@@ -4,7 +4,8 @@ import UIKit
 open class ViewController: UIViewController,UserInterface {
     
     open var isCanBeClosedByGesture: Bool = true
-    
+    open var isAppeared: Bool { !appearanceQueue.isSuspended }
+
     let appearanceQueue: OperationQueue = {
         $0.qualityOfService = .userInteractive
         $0.isSuspended = true
