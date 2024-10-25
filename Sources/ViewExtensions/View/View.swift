@@ -36,7 +36,7 @@ open class View: UIControl, UserInterface {
 
     }
 
-    public override func didMoveToSuperview() {
+    open override func didMoveToSuperview() {
         super.didMoveToSuperview()
         if !sizeSet {
             sizeSet = true

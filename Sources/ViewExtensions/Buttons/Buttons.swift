@@ -104,19 +104,30 @@ private class LoadibleUIMaskView: View {
         control.autoCenterInSuperview()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        _updateMask()
+    }
+
     func show(isLoading: Bool) {
         if isLoading {
-            isHidden = true
-            if let snapshot = superview?.snapshotView(afterScreenUpdates: true) {
-                snapshot.frame = bounds
-                backView.mask = snapshot
-            }
-            isHidden = false
+            _updateMask()
             control.start()
         }else{
             isHidden = true
             control.stop()
         }
+    }
+
+    private func _updateMask() {
+        guard superview != nil, !isHidden, bounds.size.width > 0, bounds.size.height > 0 else { return }
+
+        isHidden = true
+        if let snapshot = superview?.snapshotView(afterScreenUpdates: true) {
+            snapshot.frame = bounds
+            backView.mask = snapshot
+        }
+        isHidden = false
     }
 }
 
