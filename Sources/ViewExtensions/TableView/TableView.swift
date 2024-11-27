@@ -402,3 +402,57 @@ extension TableView {
     }
 }
 
+extension UITableView {
+
+    public func layoutTableHeaderView() {
+
+        guard let headerView = self.tableHeaderView else { return }
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+
+        let headerWidth = headerView.bounds.size.width
+        let temporaryWidthConstraint = headerView.widthAnchor.constraint(equalToConstant: headerWidth)
+
+        headerView.addConstraint(temporaryWidthConstraint)
+
+        headerView.setNeedsLayout()
+        headerView.layoutIfNeeded()
+
+        let headerSize = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        let height = headerSize.height
+        var frame = headerView.frame
+
+        frame.size.height = height
+        headerView.frame = frame
+
+        self.tableHeaderView = headerView
+
+        headerView.removeConstraint(temporaryWidthConstraint)
+        headerView.translatesAutoresizingMaskIntoConstraints = true
+    }
+
+    public func layoutTableFooterView() {
+
+        guard let footerView = self.tableFooterView else { return }
+        footerView.translatesAutoresizingMaskIntoConstraints = false
+
+        let footerWidth = footerView.bounds.size.width
+        let temporaryWidthConstraint = footerView.widthAnchor.constraint(equalToConstant: footerWidth)
+
+        footerView.addConstraint(temporaryWidthConstraint)
+
+        footerView.setNeedsLayout()
+        footerView.layoutIfNeeded()
+
+        let footerSize = footerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        let height = footerSize.height
+        var frame = footerView.frame
+
+        frame.size.height = height
+        footerView.frame = frame
+
+        self.tableFooterView = footerView
+
+        footerView.removeConstraint(temporaryWidthConstraint)
+        footerView.translatesAutoresizingMaskIntoConstraints = true
+    }
+}
