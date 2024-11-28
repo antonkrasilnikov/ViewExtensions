@@ -111,6 +111,7 @@ private class LoadibleUIMaskView: View {
 
     func show(isLoading: Bool) {
         if isLoading {
+            isHidden = false
             _updateMask()
             control.start()
         }else{
