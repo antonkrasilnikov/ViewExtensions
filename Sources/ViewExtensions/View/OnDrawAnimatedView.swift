@@ -7,15 +7,17 @@ open class OnDrawAnimatedView: View {
     private var displayLink: CADisplayLink?
     private var startTs: TimeInterval?
     private var duration: TimeInterval = 0
+    private var repeating = false
     public var animationProgress: Double = 0
     
     public var animating: Bool {
         return displayLink != nil
     }
     
-    open func animate(duration: TimeInterval, completion: @escaping () -> Void) {
+    open func animate(duration: TimeInterval, repeating: Bool = false, completion: @escaping () -> Void) {
         self.completion = completion
         self.duration = duration
+        self.repeating = repeating
         animate()
     }
     
@@ -64,7 +66,9 @@ open class OnDrawAnimatedView: View {
             shouldStop = animationProgress >= 1
             
         }
-        if shouldStop {
+        if repeating {
+            startTs = INC_SystemUptime.uptime()
+        }else  if shouldStop {
             removeLink()
             if let completion = completion {
                 self.completion = nil
