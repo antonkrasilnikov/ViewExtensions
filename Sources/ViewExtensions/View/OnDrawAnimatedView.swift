@@ -66,9 +66,8 @@ open class OnDrawAnimatedView: View {
             shouldStop = animationProgress >= 1
             
         }
-        if repeating {
-            startTs = INC_SystemUptime.uptime()
-        }else  if shouldStop {
+        if shouldStop {
+            guard !repeating else { startTs = INC_SystemUptime.uptime(); return }
             removeLink()
             if let completion = completion {
                 self.completion = nil
