@@ -100,6 +100,7 @@ public typealias CollectionViewCellConfigCallback = (_ cell: CollectionViewCell)
 public typealias CollectionViewStartScrollCallback = () -> Void
 public typealias CollectionViewStartDidScrollCallback = () -> Void
 public typealias CollectionViewWasReloadedCallback = () -> Void
+public typealias CollectionViewScrollDidStopCallback = () -> Void
 
 open class CollectionView: UICollectionView {
     public var registredCellIdentifiers: [String] = []
@@ -109,6 +110,7 @@ open class CollectionView: UICollectionView {
     public var startScrollCallback: CollectionViewStartScrollCallback?
     public var scrollCallback: CollectionViewStartDidScrollCallback?
     public var reloadCallback: CollectionViewWasReloadedCallback?
+    public var stopScrollCallback: CollectionViewScrollDidStopCallback?
 
     public var sections: [CollectionViewSection] = [] {
         didSet {
@@ -304,6 +306,16 @@ extension CollectionView: UICollectionViewDelegate,UICollectionViewDataSource {
 
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         scrollCallback?()
+    }
+
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            stopScrollCallback?()
+        }
+    }
+
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        stopScrollCallback?()
     }
 }
 
