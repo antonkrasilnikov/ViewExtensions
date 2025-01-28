@@ -150,6 +150,8 @@ open class CollectionView: UICollectionView {
                 _frizeSections = sections
                 if !_tryUpdateVisible() {
                     reloadSections(IndexSet(integer: sections.count-1))
+                }else{
+                    perform(#selector(_reloaded), with: nil, afterDelay: 0)
                 }
             }
         }else{

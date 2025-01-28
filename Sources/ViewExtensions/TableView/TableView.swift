@@ -131,6 +131,8 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource {
                 _frizeSections = sections
                 if !_tryUpdateVisible() {
                     reloadData()
+                }else{
+                    perform(#selector(_reloaded), with: nil, afterDelay: 0)
                 }
             }
 
