@@ -110,10 +110,10 @@ private class LoadibleUIMaskView: View {
         _updateMask()
     }
 
-    var isLoading = false {
+    var isLoading: Bool? {
         didSet {
             guard isLoading != oldValue else { return }
-            if isLoading {
+            if isLoading == true {
                 isHidden = false
                 _updateMask()
                 control.start()
