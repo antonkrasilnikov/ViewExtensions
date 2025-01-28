@@ -86,6 +86,7 @@ private class LoadibleUIMaskView: View {
     let backView = UIView()
     let control = LoadControl(animationType: .line)
 
+
     override func setup() {
         super.setup()
 
@@ -109,14 +110,17 @@ private class LoadibleUIMaskView: View {
         _updateMask()
     }
 
-    func show(isLoading: Bool) {
-        if isLoading {
-            isHidden = false
-            _updateMask()
-            control.start()
-        }else{
-            isHidden = true
-            control.stop()
+    var isLoading = false {
+        didSet {
+            guard isLoading != oldValue else { return }
+            if isLoading {
+                isHidden = false
+                _updateMask()
+                control.start()
+            }else{
+                isHidden = true
+                control.stop()
+            }
         }
     }
 
@@ -150,6 +154,6 @@ extension LoadibleUIControl {
     }
 
     public func show(isLoading: Bool) {
-        _loadibleMaskView().show(isLoading: isLoading)
+        _loadibleMaskView().isLoading = isLoading
     }
 }
