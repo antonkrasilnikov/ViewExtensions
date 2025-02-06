@@ -2,6 +2,57 @@ import Foundation
 import UIKit
 import Timers
 
+public enum CollectionViewSupplementaryLayout {
+    case fullWidthAspectHeight(aspect: CGFloat)
+    case fullWidth(height: CGFloat)
+    case sectionWidthAspectHeight(aspect: CGFloat)
+    case sectionWidth(height: CGFloat)
+}
+
+open class CollectionSupplementaryItem {
+    public let reuseIdentifier: String
+    public let viewType: AnyClass
+    public let layout: CollectionViewSupplementaryLayout
+
+    public init(layout: CollectionViewSupplementaryLayout, reuseIdentifier: String, viewType: AnyClass) {
+        self.layout = layout
+        self.reuseIdentifier = reuseIdentifier
+        self.viewType = viewType
+    }
+}
+
+open class CollectionSupplementaryView: UICollectionReusableView {
+    open var item: CollectionSupplementaryItem?
+    open var sizeSet = false
+
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    public init() {
+        super.init(frame: CGRect.zero)
+        setup()
+    }
+
+    open func setup() {}
+
+    open override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        if !sizeSet {
+            sizeSet = true
+            setupSizes()
+        }
+    }
+
+    open func setupSizes() {}
+}
+
 open class CollectionViewCellItem {
     public let reuseIdentifier: String
     public let cellType: AnyClass
@@ -35,9 +86,7 @@ open class CollectionViewCell: UICollectionViewCell {
         setup()
     }
 
-    open func setup() {
-
-    }
+    open func setup() {}
 
     open override func didMoveToSuperview() {
         super.didMoveToSuperview()
@@ -47,9 +96,7 @@ open class CollectionViewCell: UICollectionViewCell {
         }
     }
 
-    open func setupSizes() {
-
-    }
+    open func setupSizes() {}
 
     public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if !shouldBeOpaqueInTouch {
@@ -85,13 +132,40 @@ open class CollectionViewCell: UICollectionViewCell {
     }
 }
 
+public enum CollectionViewSectionItemLayout {
+    case undef
+    case fullWidthAspectHeight(aspect: CGFloat)
+    case fullWidth(height: CGFloat)
+    case rawAspectHeight(count: Int, aspect: CGFloat)
+    case raw(count: Int, height: CGFloat)
+}
+
 open class CollectionViewSection {
     public let items: [CollectionViewCellItem]
+    public let headerItem: CollectionSupplementaryItem?
+    public let footerItem: CollectionSupplementaryItem?
     public let number: Int
+    public let itemLayout: CollectionViewSectionItemLayout
+    public let sectionInset: UIEdgeInsets
+    public let minimumInteritemSpacing: CGFloat
+    public let minimumLineSpacing: CGFloat
 
-    public init(number: Int, items: [CollectionViewCellItem]) {
+    public init(number: Int,
+                items: [CollectionViewCellItem],
+                headerItem: CollectionSupplementaryItem? = nil,
+                footerItem: CollectionSupplementaryItem? = nil,
+                itemLayout: CollectionViewSectionItemLayout = .undef,
+                sectionInset: UIEdgeInsets = .zero,
+                minimumInteritemSpacing: CGFloat = 0,
+                minimumLineSpacing: CGFloat = 0) {
         self.number = number
         self.items = items
+        self.headerItem = headerItem
+        self.footerItem = footerItem
+        self.itemLayout = itemLayout
+        self.sectionInset = sectionInset
+        self.minimumInteritemSpacing = minimumInteritemSpacing
+        self.minimumLineSpacing = minimumLineSpacing
     }
 }
 
@@ -103,7 +177,7 @@ public typealias CollectionViewWasReloadedCallback = () -> Void
 public typealias CollectionViewScrollDidStopCallback = () -> Void
 
 open class CollectionView: UICollectionView {
-    public var registredCellIdentifiers: [String] = []
+    public var registredIdentifiers: [String] = []
 
     public var selectItemCallback: CollectionViewCallback?
     public var configCellCallback: CollectionViewCellConfigCallback?
@@ -117,9 +191,15 @@ open class CollectionView: UICollectionView {
 
             for section in self.sections {
                 for item in section.items {
-                    if !registredCellIdentifiers.contains(item.reuseIdentifier) {
+                    if !registredIdentifiers.contains(item.reuseIdentifier) {
                         register(item.cellType, forCellWithReuseIdentifier: item.reuseIdentifier)
-                        registredCellIdentifiers.append(item.reuseIdentifier)
+                        registredIdentifiers.append(item.reuseIdentifier)
+                    }
+                    if let headerItem = section.headerItem, !registredIdentifiers.contains(headerItem.reuseIdentifier) {
+                        register(headerItem.viewType, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerItem.reuseIdentifier)
+                    }
+                    if let footerItem = section.footerItem, !registredIdentifiers.contains(footerItem.reuseIdentifier) {
+                        register(footerItem.viewType, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: footerItem.reuseIdentifier)
                     }
                 }
             }
@@ -319,5 +399,34 @@ extension CollectionView: UICollectionViewDelegate,UICollectionViewDataSource {
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         stopScrollCallback?()
     }
+
+    public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard indexPath.section < _frizeSections.count else { return UICollectionReusableView() }
+
+        let reusableView: CollectionSupplementaryView?
+        let section = _frizeSections[indexPath.section]
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            guard let item = section.headerItem else { return UICollectionReusableView() }
+            reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: item.reuseIdentifier, for: indexPath) as? CollectionSupplementaryView
+            reusableView?.item = item
+        case UICollectionView.elementKindSectionFooter:
+            guard let item = section.footerItem else { return UICollectionReusableView() }
+            reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: item.reuseIdentifier, for: indexPath) as? CollectionSupplementaryView
+            reusableView?.item = item
+        default:
+            return UICollectionReusableView()
+        }
+
+        if let reusableView {
+            return reusableView
+        }else{
+            fatalError("Supplementary view is not registred")
+        }
+    }
+
 }
 
+//extension CollectionView: UICollectionViewDelegateFlowLayout {
+//    
+//}
