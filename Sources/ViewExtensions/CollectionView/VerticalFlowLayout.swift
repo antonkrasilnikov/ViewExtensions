@@ -129,7 +129,8 @@ open class VerticalFlowLayout: UICollectionViewLayout {
                     itemSize = .init(width: sectionWidth, height: height)
                 case .rawAspectHeight(let count, let aspect):
                     if count > 0 {
-                        itemSize = .init(width: (sectionWidth - minimumInteritemSpacing*CGFloat(count-1))/CGFloat(count), height: sectionWidth*aspect)
+                        let w = (sectionWidth - minimumInteritemSpacing*CGFloat(count-1))/CGFloat(count)
+                        itemSize = .init(width: w, height: w*aspect)
                     }else{
                         itemSize = .zero
                     }
