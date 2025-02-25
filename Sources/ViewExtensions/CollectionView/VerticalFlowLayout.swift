@@ -158,7 +158,7 @@ open class VerticalFlowLayout: UICollectionViewLayout {
                     case .fullWidthAspectHeight(_), .fullWidth(_):
                         offsetY += itemSize.height + minimumLineSpacing
                     case .rawAspectHeight(let count, _), .raw(let count, _):
-                        if index != 0 && index % count == 0 {
+                        if (index + 1) % count == 0 {
                             offsetX = section.sectionInset.left
                             offsetY += itemSize.height + minimumLineSpacing
                         }else{
