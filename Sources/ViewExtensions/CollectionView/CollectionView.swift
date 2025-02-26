@@ -223,13 +223,17 @@ open class CollectionView: UICollectionView {
             if _frizeSections.isEmpty ||
                 sections.isEmpty ||
                 sections.count != numberOfSections ||
-                Array(0..<numberOfSections).first(where: { sections[$0].items.count != numberOfItems(inSection: $0) }) != nil {
+                _frizeSections.count != sections.count ||
+                Array(0..<numberOfSections).first(where: {
+                    sections[$0].items.count != numberOfItems(inSection: $0) ||
+                    sections[$0].headerItem?.reuseIdentifier != _frizeSections[$0].headerItem?.reuseIdentifier ||
+                    sections[$0].footerItem?.reuseIdentifier != _frizeSections[$0].footerItem?.reuseIdentifier }) != nil {
                 _frizeSections = sections
                 reloadData()
             }else{
                 _frizeSections = sections
                 if !_tryUpdateVisible() {
-                    reloadSections(IndexSet(integer: sections.count-1))
+                    reloadSections(IndexSet(0..<sections.count))
                 }else{
                     perform(#selector(_reloaded), with: nil, afterDelay: 0)
                 }
@@ -267,6 +271,14 @@ open class CollectionView: UICollectionView {
                 }
             }
 
+            indexPathsForVisibleSupplementaryElements(ofKind: UICollectionView.elementKindSectionHeader).forEach { indexPath in
+                (supplementaryView(forElementKind: UICollectionView.elementKindSectionHeader, at: indexPath) as? CollectionSupplementaryView)?.item = _frozenHeaderItem(at: indexPath)
+            }
+
+            indexPathsForVisibleSupplementaryElements(ofKind: UICollectionView.elementKindSectionFooter).forEach { indexPath in
+                (supplementaryView(forElementKind: UICollectionView.elementKindSectionFooter, at: indexPath) as? CollectionSupplementaryView)?.item = _frozenFooterItem(at: indexPath)
+            }
+
             if !reconfigurePaths.isEmpty {
                 _reconfigureRows(at: reconfigurePaths)
             }
@@ -291,6 +303,14 @@ open class CollectionView: UICollectionView {
     private func _frozenItem(at indexPath: IndexPath) -> CollectionViewCellItem {
         let section = _frizeSections[indexPath.section]
         return section.items[indexPath.row]
+    }
+
+    private func _frozenHeaderItem(at indexPath: IndexPath) -> CollectionSupplementaryItem? {
+        _frizeSections[indexPath.section].headerItem
+    }
+
+    private func _frozenFooterItem(at indexPath: IndexPath) -> CollectionSupplementaryItem? {
+        _frizeSections[indexPath.section].footerItem
     }
 
     public override func reloadData() {
