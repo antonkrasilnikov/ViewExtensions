@@ -17,6 +17,7 @@ public extension CAAnimation {
         case strokeColor
         case lineWidth
         case strokeEnd
+        case curve
     }
 
     struct WBWKeyFrameAnimationModel {
@@ -112,10 +113,17 @@ public extension CAAnimation {
             keyPath = "lineWidth"
         case .strokeEnd:
             keyPath = "strokeEnd"
+        case .curve:
+            keyPath = #keyPath(CALayer.position)
         }
 
         let animation = CAKeyframeAnimation.init(keyPath: keyPath)
-        animation.values = keyFrameModel.values
+        switch keyFrameModel.type {
+        case .curve:
+            animation.path = (keyFrameModel.values.first as! CGPath)
+        default:
+            animation.values = keyFrameModel.values
+        }
         animation.keyTimes = keyFrameModel.times
         animation.timingFunctions = keyFrameModel.timingFunctions
         animation.calculationMode = keyFrameModel.calculationMode
@@ -655,5 +663,19 @@ public class KeyFrameAnimation: NSObject {
 
     public class func addPerform(time: TimeInterval, over view: UIView, action: @escaping () -> Void) {
         Self.keyFramesPerformsBuffer.append(.init(time: time, action: action, syncView: view))
+    }
+
+    public class func addCurveAnimation(view: UIView,
+                                 value: CGPath,
+                                 times: [TimeInterval]? = nil,
+                                 timingFunctionName: CAMediaTimingFunctionName? = nil,
+                                 timingFunctions: [CAMediaTimingFunction]? = nil) {
+        Self.keyFramesBuffer.append(.init(layer: view.layer,
+                                          model: CAAnimation
+            .WBWKeyFrameAnimationModel(type: .curve,
+                                       values: [value],
+                                       times: times,
+                                       timingFunctions: timeFunctions(timingFunctionName: timingFunctionName,
+                                                                      timingFunctions: timingFunctions))))
     }
 }
