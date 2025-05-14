@@ -174,6 +174,9 @@ PL__ASSUME_NONNULL_BEGIN
 /** Matches a dimension of the view to a multiple of a given dimension of another view. */
 - (NSLayoutConstraint *)autoMatchDimension:(ALDimension)dimension toDimension:(ALDimension)toDimension ofView:(ALView *)otherView withMultiplier:(CGFloat)multiplier;
 
+/** Matches a dimension of the view to a multiple of a given dimension of another view. */
+- (NSLayoutConstraint *)autoMatchDimension:(ALDimension)dimension toDimension:(ALDimension)toDimension ofView:(ALView *)otherView withMultiplier:(CGFloat)multiplier withOffset:(CGFloat)offset;
+
 /** Matches a dimension of the view to a multiple of a given dimension of another view as a maximum or minimum. */
 - (NSLayoutConstraint *)autoMatchDimension:(ALDimension)dimension toDimension:(ALDimension)toDimension ofView:(ALView *)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;
 
@@ -214,6 +217,9 @@ PL__ASSUME_NONNULL_BEGIN
 
 /** Constrains an attribute of the view to a given attribute of another view with a multiplier. */
 - (NSLayoutConstraint *)autoConstrainAttribute:(ALAttribute)attribute toAttribute:(ALAttribute)toAttribute ofView:(ALView *)otherView withMultiplier:(CGFloat)multiplier;
+
+/** Constrains an attribute of the view to a given attribute of another view with a multiplier. */
+- (NSLayoutConstraint *)autoConstrainAttribute:(ALAttribute)attribute toAttribute:(ALAttribute)toAttribute ofView:(ALView *)otherView withOffset:(CGFloat)offset withMultiplier:(CGFloat)multiplier;
 
 /** Constrains an attribute of the view to a given attribute of another view with a multiplier as a maximum or minimum. */
 - (NSLayoutConstraint *)autoConstrainAttribute:(ALAttribute)attribute toAttribute:(ALAttribute)toAttribute ofView:(ALView *)otherView withMultiplier:(CGFloat)multiplier relation:(NSLayoutRelation)relation;

@@ -759,6 +759,11 @@
     return [self autoMatchDimension:dimension toDimension:toDimension ofView:otherView withMultiplier:multiplier relation:NSLayoutRelationEqual];
 }
 
+- (NSLayoutConstraint *)autoMatchDimension:(ALDimension)dimension toDimension:(ALDimension)toDimension ofView:(ALView *)otherView withMultiplier:(CGFloat)multiplier withOffset:(CGFloat)offset
+{
+    return [self autoMatchDimension:dimension toDimension:toDimension ofView:otherView withMultiplier:multiplier withOffset:offset relation:NSLayoutRelationEqual];
+}
+
 /**
  Matches a dimension of the view to a multiple of a given dimension of another view as a maximum or minimum.
  
@@ -774,6 +779,10 @@
     return [self autoConstrainAttribute:(ALAttribute)dimension toAttribute:(ALAttribute)toDimension ofView:otherView withMultiplier:multiplier relation:relation];
 }
 
+- (NSLayoutConstraint *)autoMatchDimension:(ALDimension)dimension toDimension:(ALDimension)toDimension ofView:(ALView *)otherView withMultiplier:(CGFloat)multiplier withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation
+{
+    return [self autoConstrainAttribute:(ALAttribute)dimension toAttribute:(ALAttribute)toDimension ofView:otherView withMultiplier:multiplier withOffset:offset relation:relation];
+}
 
 #pragma mark Set Dimensions
 
@@ -932,6 +941,26 @@
 }
 
 /**
+ Constrains an attribute of the view to a given attribute of another view with a multiplier.
+ This method can be used to constrain different types of attributes across two views.
+
+ @param attribute Any attribute of this view to constrain.
+ @param toAttribute Any attribute of the other view to constrain to.
+ @param otherView The other view to constrain to. Must be in the same view hierarchy as this view.
+ @param offset The offset between the attribute of this view and the attribute of the other view.
+ @param multiplier The multiplier between the attribute of this view and the attribute of the other view.
+ @return The constraint added.
+ */
+- (NSLayoutConstraint *)autoConstrainAttribute:(ALAttribute)attribute toAttribute:(ALAttribute)toAttribute ofView:(ALView *)otherView withOffset:(CGFloat)offset withMultiplier:(CGFloat)multiplier {
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    NSLayoutAttribute layoutAttribute = [NSLayoutConstraint al_layoutAttributeForAttribute:attribute];
+    NSLayoutAttribute toLayoutAttribute = [NSLayoutConstraint al_layoutAttributeForAttribute:toAttribute];
+    NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self attribute:layoutAttribute relatedBy:NSLayoutRelationEqual toItem:otherView attribute:toLayoutAttribute multiplier:multiplier constant:0.0];
+    [constraint autoInstall];
+    return constraint;
+}
+
+/**
  Constrains an attribute of the view to a given attribute of another view with a multiplier as a maximum or minimum.
  This method can be used to constrain different types of attributes across two views.
  
@@ -952,6 +981,15 @@
     return constraint;
 }
 
+- (NSLayoutConstraint *)autoConstrainAttribute:(ALAttribute)attribute toAttribute:(ALAttribute)toAttribute ofView:(ALView *)otherView withMultiplier:(CGFloat)multiplier withOffset:(CGFloat)offset relation:(NSLayoutRelation)relation
+{
+    self.translatesAutoresizingMaskIntoConstraints = NO;
+    NSLayoutAttribute layoutAttribute = [NSLayoutConstraint al_layoutAttributeForAttribute:attribute];
+    NSLayoutAttribute toLayoutAttribute = [NSLayoutConstraint al_layoutAttributeForAttribute:toAttribute];
+    NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self attribute:layoutAttribute relatedBy:relation toItem:otherView attribute:toLayoutAttribute multiplier:multiplier constant:offset];
+    [constraint autoInstall];
+    return constraint;
+}
 
 #pragma mark Pin to Layout Guides
 
