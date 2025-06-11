@@ -304,18 +304,18 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource {
     }
 
     public func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        guard let cell = tableView.cellForRow(at: indexPath) as? TableViewCell, let item = cell.item else { return .none }
-        return item.editingStyle
+        guard indexPath.section < _frizeSections.count, indexPath.row < _frizeSections[indexPath.section].items.count else { return .none }
+        return _frozenItem(at: indexPath).editingStyle
     }
 
     public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        guard let cell = tableView.cellForRow(at: indexPath) as? TableViewCell, let item = cell.item else { return false }
-        return item.editingStyle != .none
+        guard indexPath.section < _frizeSections.count, indexPath.row < _frizeSections[indexPath.section].items.count else { return false }
+        return _frozenItem(at: indexPath).editingStyle != .none
     }
 
     public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        guard let cell = tableView.cellForRow(at: indexPath) as? TableViewCell, let item = cell.item else { return }
-        editCallback?(item, editingStyle)
+        guard indexPath.section < _frizeSections.count, indexPath.row < _frizeSections[indexPath.section].items.count else { return }
+        editCallback?(_frozenItem(at: indexPath), editingStyle)
     }
 
     open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
