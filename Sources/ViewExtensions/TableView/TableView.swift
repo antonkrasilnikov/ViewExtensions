@@ -304,13 +304,13 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource {
     }
 
     public func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        guard let cell = tableView.cellForRow(at: indexPath) as? TableViewCell else { return .none }
-        return cell.editingStyle
+        guard let cell = tableView.cellForRow(at: indexPath) as? TableViewCell, let item = cell.item else { return .none }
+        return item.editingStyle
     }
 
     public func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        guard let cell = tableView.cellForRow(at: indexPath) as? TableViewCell else { return false }
-        return cell.editingStyle != .none
+        guard let cell = tableView.cellForRow(at: indexPath) as? TableViewCell, let item = cell.item else { return false }
+        return item.editingStyle != .none
     }
 
     public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
