@@ -7,6 +7,7 @@ open class TableViewCellItem {
     public let reuseIdentifier: String
     public let cellType: AnyClass
     public var actionTypes: [AnyClass] = []
+    public var editingStyle: UITableViewCell.EditingStyle = .none
 
     public init(reuseIdentifier: String, cellType: AnyClass) {
         self.reuseIdentifier = reuseIdentifier
@@ -66,6 +67,7 @@ public typealias TableViewRowActionCallback = (_ item: TableViewCellItem, _ acti
 public typealias TableViewEditActionsWillAppearCallback = (_ item: TableViewCellItem) -> Void
 public typealias TableViewWasReloadedCallback = () -> Void
 public typealias TableViewEndScrollingAnimationCallback = () -> Void
+public typealias TableViewRowEditActionCallback = (_ item: TableViewCellItem, _ editType: UITableViewCell.EditingStyle) -> Void
 
 open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource {
 
@@ -79,6 +81,7 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource {
     public var rowActionCallback: TableViewRowActionCallback?
     public var editActionsWillAppearCallback: TableViewEditActionsWillAppearCallback?
     public var reloadCallback: TableViewWasReloadedCallback?
+    public var editCallback: TableViewRowEditActionCallback?
     private var _endScrollingAnimationCallbacks: [TableViewEndScrollingAnimationCallback] = []
 
     var registredCellIdentifiers: [String] = []
@@ -298,6 +301,16 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource {
                 selectItemCallback(item)
             }
         }
+    }
+
+    public func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        guard let cell = tableView.cellForRow(at: indexPath) as? TableViewCell else { return .none }
+        return cell.editingStyle
+    }
+
+    public func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        guard let cell = tableView.cellForRow(at: indexPath) as? TableViewCell, let item = cell.item else { return }
+        editCallback?(item, editingStyle)
     }
 
     open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
