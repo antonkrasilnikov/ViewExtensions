@@ -344,7 +344,7 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource {
     public func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 
         guard let cell = tableView.cellForRow(at: indexPath) as? TableViewCell,
-            let item = cell.item else { return [] }
+            let item = cell.item else { return nil }
 
         editActionsWillAppearCallback?(item)
 
