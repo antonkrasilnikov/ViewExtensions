@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "AsyncOperation",
+        "repositoryURL": "https://github.com/antonkrasilnikov/AsyncOperation.git",
+        "state": {
+          "branch": null,
+          "revision": "e0769beadcdb234c1761d8ac4a02db495bb2bca5",
+          "version": "1.0.2"
+        }
+      },
+      {
         "package": "INCTimers",
         "repositoryURL": "https://github.com/antonkrasilnikov/INCTimers.git",
         "state": {
