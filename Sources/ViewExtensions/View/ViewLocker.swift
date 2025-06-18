@@ -2,7 +2,6 @@
 //  ViewLocker.swift
 //
 //  Created by Антон Красильников on 25.04.2022.
-//  Copyright © 2022 Incrdbl Mbile Entertaiment. All rights reserved.
 //
 
 import Foundation

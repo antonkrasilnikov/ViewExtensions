@@ -2,7 +2,6 @@
 //  ScrollingLabel.swift
 //
 //  Created by Антон Красильников on 22.03.2021.
-//  Copyright © 2021 Incrdbl Mbile Entertaiment. All rights reserved.
 //
 
 import Foundation

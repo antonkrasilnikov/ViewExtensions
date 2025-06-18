@@ -3,7 +3,6 @@
 //  wordByWord
 //
 //  Created by Антон Красильников on 10.06.2022.
-//  Copyright © 2022 Incrdbl Mbile Entertaiment. All rights reserved.
 //
 
 import Foundation
