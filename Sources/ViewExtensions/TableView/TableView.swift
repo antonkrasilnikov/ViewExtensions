@@ -240,7 +240,7 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
                 register(footerItem.viewType, forHeaderFooterViewReuseIdentifier: footerItem.reuseIdentifier)
             }
         }
-        _reloadData(data: .init(sections: sections, isReloadRequested: isReloading))
+        _reloadData(data: .init(sections: sections, isReloadRequested: isReloading), completion: completion)
     }
 
     @objc
