@@ -177,12 +177,14 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
     public var sections: [TableViewSection] { get { _frozenSections } set { set(sections: newValue) } }
     public var selectionSound: ControlInteractionSound? = UISoundDefault.tap
     public var isKeyboardSizeSensitive = true
+    public let debounceDelay: TimeInterval
 
     public required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
 
-    public init(sections: [TableViewSection] = []) {
+    public init(debounceDelay: TimeInterval = 0.3, sections: [TableViewSection]? = nil) {
+        self.debounceDelay = debounceDelay
         super.init(frame: CGRect.zero, style: .plain)
         delegate = self
         dataSource = self
@@ -196,7 +198,9 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
         }
         NotificationCenter.default.addObserver(self, selector: #selector(_keyboardAppearanceWillChange(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(_keyboardAppearanceWillChange(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        set(sections: sections)
+        if let sections {
+            set(sections: sections)
+        }
     }
 
     public func set(sections: [TableViewSection]) {
@@ -217,7 +221,7 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
     private lazy var _reloadDebouncer = {
         $0.reloadFinishCallback = { [weak self] in self?._reloaded() }
         return $0
-    }(ReloadDebouncer(queue: queue))
+    }(ReloadDebouncer(interval: debounceDelay, queue: queue))
     private var _endScrollingAnimationCallbacks: [TableViewEndScrollingAnimationCallback] = []
     private var registredIdentifiers: [String] = []
 
