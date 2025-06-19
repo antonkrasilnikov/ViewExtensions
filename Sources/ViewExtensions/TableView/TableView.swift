@@ -257,20 +257,22 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
 
     private func queuedReload(isReloadRequested: Bool, sections: [TableViewSection], completion: @escaping () -> Void) {
         defer { completion() }
-        let numberOfSections = numberOfSections
-        if isReloadRequested ||
-            self._frozenSections.isEmpty ||
-            sections.isEmpty ||
-            sections.count != numberOfSections ||
-           Array(0..<numberOfSections).first(where: { sections[$0].items.count != numberOfRows(inSection: $0) ||
-               sections[$0].headerItem?.reuseIdentifier != _frozenSections[$0].headerItem?.reuseIdentifier ||
-               sections[$0].footerItem?.reuseIdentifier != _frozenSections[$0].footerItem?.reuseIdentifier}) != nil {
-            self._frozenSections = sections
-            super.reloadData()
-        }else{
-            self._frozenSections = sections
-            guard !self._tryUpdateVisible() else { return }
-            super.reloadData()
+        UIView.performWithoutAnimation {
+            let numberOfSections = numberOfSections
+            if isReloadRequested ||
+                self._frozenSections.isEmpty ||
+                sections.isEmpty ||
+                sections.count != numberOfSections ||
+               Array(0..<numberOfSections).first(where: { sections[$0].items.count != numberOfRows(inSection: $0) ||
+                   sections[$0].headerItem?.reuseIdentifier != _frozenSections[$0].headerItem?.reuseIdentifier ||
+                   sections[$0].footerItem?.reuseIdentifier != _frozenSections[$0].footerItem?.reuseIdentifier}) != nil {
+                self._frozenSections = sections
+                super.reloadData()
+            }else{
+                self._frozenSections = sections
+                guard !self._tryUpdateVisible() else { return }
+                super.reloadData()
+            }
         }
     }
 
