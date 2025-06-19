@@ -21,8 +21,8 @@ open class EdgeGradientTableView: TableView {
     private let outerColor = UIColor(white: 1.0, alpha: 0.0).cgColor
     private let innerColor = UIColor(white: 1.0, alpha: 1.0).cgColor
 
-    public override init(sections: [TableViewSection] = []) {
-        super.init(sections: sections)
+    public override init(debounceDelay: TimeInterval = 0.3, sections: [TableViewSection]? = nil) {
+        super.init(debounceDelay: debounceDelay, sections: sections)
         addObserver(self, forKeyPath: "bounds", options: NSKeyValueObservingOptions(rawValue: 0), context: nil)
     }
 
