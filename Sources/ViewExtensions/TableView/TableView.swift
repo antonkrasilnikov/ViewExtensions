@@ -29,8 +29,8 @@ public protocol TableViewInterface: NSObjectProtocol {
     var selectionSound: ControlInteractionSound? { set get }
     var isKeyboardSizeSensitive: Bool { set get }
 
-    func set(sections: [TableViewSection])
-    func reload(with sections: [TableViewSection])
+    func set(sections: [TableViewSection], completion: (() -> Void)?)
+    func reload(with sections: [TableViewSection], completion: (() -> Void)?)
     func scrollAnimatedToRow(at indexPath: IndexPath, at scrollPosition: UITableView.ScrollPosition, completion: @escaping () -> Void)
 }
 
@@ -203,12 +203,12 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
         }
     }
 
-    public func set(sections: [TableViewSection]) {
-        set(sections: sections, isReloading: false)
+    public func set(sections: [TableViewSection], completion: (() -> Void)? = nil) {
+        set(sections: sections, isReloading: false, completion: completion)
     }
 
-    public func reload(with sections: [TableViewSection]) {
-        set(sections: sections, isReloading: true)
+    public func reload(with sections: [TableViewSection], completion: (() -> Void)? = nil) {
+        set(sections: sections, isReloading: true, completion: completion)
     }
 
 // MARK: private methods
@@ -225,7 +225,7 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
     private var _endScrollingAnimationCallbacks: [TableViewEndScrollingAnimationCallback] = []
     private var registredIdentifiers: [String] = []
 
-    private func set(sections: [TableViewSection], isReloading: Bool) {
+    private func set(sections: [TableViewSection], isReloading: Bool, completion: (() -> Void)? = nil) {
         for section in sections {
             for item in section.items {
                 if !registredIdentifiers.contains(item.reuseIdentifier) {
@@ -244,10 +244,14 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
     }
 
     @objc
-    private func _reloadData(data: TableReloadData) {
+    private func _reloadData(data: TableReloadData, completion: (() -> Void)? = nil) {
         _reloadDebouncer.add(operation: .init(block: { [weak self] finish in
-            guard let self else { finish(); return }
-            self.queuedReload(isReloadRequested: data.isReloadRequested, sections: data.sections, completion: finish)
+            let blockFinish: () -> Void = {
+                completion?()
+                finish()
+            }
+            guard let self else { blockFinish(); return }
+            self.queuedReload(isReloadRequested: data.isReloadRequested, sections: data.sections, completion: blockFinish)
         }))
     }
 
