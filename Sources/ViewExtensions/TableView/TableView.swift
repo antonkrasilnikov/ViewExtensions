@@ -175,7 +175,7 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
     public var rowActionCallback: TableViewRowActionCallback?
     public var reloadCallback: TableViewWasReloadedCallback?
     public var editCallback: TableViewRowEditActionCallback?
-    public var sections: [TableViewSection] { get { _frozenSections } set { set(sections: newValue) } }
+    public var sections: [TableViewSection] { get { _translatedSections ?? _frozenSections } set { set(sections: newValue) } }
     public var selectionSound: ControlInteractionSound? = UISoundDefault.tap
     public var isKeyboardSizeSensitive = true
     public let debounceDelay: TimeInterval
@@ -218,6 +218,7 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
         $0.maxConcurrentOperationCount = 1
         return $0
     }(AsyncOperationQueue(underlyingQueue: .main))
+    private var _translatedSections: [TableViewSection]?
     private var _frozenSections: [TableViewSection] = []
     private lazy var _reloadDebouncer = {
         $0.reloadFinishCallback = { [weak self] in self?._reloaded() }
@@ -241,6 +242,7 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
                 register(footerItem.viewType, forHeaderFooterViewReuseIdentifier: footerItem.reuseIdentifier)
             }
         }
+        _translatedSections = sections
         _reloadData(data: .init(sections: sections, isReloadRequested: isReloading), completion: completion)
     }
 
@@ -274,6 +276,7 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
                 guard !self._tryUpdateVisible() else { return }
                 super.reloadData()
             }
+            self._translatedSections = nil
         }
     }
 
