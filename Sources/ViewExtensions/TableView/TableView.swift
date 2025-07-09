@@ -259,7 +259,7 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
     }
 
     private func queuedReload(isReloadRequested: Bool, sections: [TableViewSection], completion: @escaping () -> Void) {
-        defer { completion() }
+        defer { self._translatedSections = nil; completion() }
         UIView.performWithoutAnimation {
             let numberOfSections = numberOfSections
             if isReloadRequested ||
@@ -276,7 +276,6 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
                 guard !self._tryUpdateVisible() else { return }
                 super.reloadData()
             }
-            self._translatedSections = nil
         }
     }
 
@@ -727,6 +726,7 @@ extension TableView: TableViewEditInterface {
             }
             guard !isOutBounds else { block(false); return }
             self._frozenSections = frizeSections
+            if animation == .none, self._tryUpdateVisible() { block(true); return }
             self.performBatchUpdates({ self.queuedReloadRows(at: items.map(\.indexPath), with: animation) }, completion: block)
         }
     }
