@@ -38,6 +38,7 @@ public protocol TableViewEditInterface: NSObjectProtocol {
     func deleteRows(indexPaths: [IndexPath], with animation: UITableView.RowAnimation, completion: @escaping (Bool) -> Void)
     func moveRow(at indexPath: IndexPath, to newIndexPath: IndexPath, completion: @escaping (Bool) -> Void)
     func insert(items: [TableRawEditEntity], with animation: UITableView.RowAnimation, completion: @escaping (Bool) -> Void)
+    func reload(items: [TableRawEditEntity], with animation: UITableView.RowAnimation, completion: @escaping (Bool) -> Void)
     func deleteSections(_ sections: IndexSet, with animation: UITableView.RowAnimation, completion: @escaping (Bool) -> Void)
     func insertSections(_ sections: [TableSectionEditEntity], with animation: UITableView.RowAnimation, completion: @escaping (Bool) -> Void)
 }
@@ -286,6 +287,10 @@ open class TableView: UITableView,UITableViewDelegate,UITableViewDataSource,Tabl
 
     private func queuedInsertRows(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {
         super.insertRows(at: indexPaths, with: animation)
+    }
+
+    private func queuedReloadRows(at indexPaths: [IndexPath], with animation: UITableView.RowAnimation) {
+        super.reloadRows(at: indexPaths, with: animation)
     }
 
     private func queuedDeleteSections(_ sections: IndexSet, with animation: UITableView.RowAnimation) {
@@ -696,6 +701,30 @@ extension TableView: TableViewEditInterface {
             guard !isOutBounds else { block(false); return }
             self._frozenSections = frizeSections
             self.performBatchUpdates({ self.queuedInsertRows(at: items.map(\.indexPath), with: animation) }, completion: block)
+        }
+    }
+
+    public func reload(items: [TableRawEditEntity], with animation: UITableView.RowAnimation, completion: @escaping (Bool) -> Void) {
+        queue.add { [weak self] finish in
+            let block: (Bool) -> Void = { completion($0); finish() }
+            guard let self else { block(false); return }
+            var frizeSections = self._frozenSections
+            var isOutBounds = false
+
+            for item in items {
+                guard item.indexPath.section < frizeSections.count,
+                      item.indexPath.row < frizeSections[item.indexPath.section].items.count
+                else {
+                    isOutBounds = true
+                    break
+                }
+                var items = frizeSections[item.indexPath.section].items
+                items.replaceSubrange(item.indexPath.row...item.indexPath.row, with: [item.item])
+                frizeSections[item.indexPath.section] = frizeSections[item.indexPath.section].copy(items: items)
+            }
+            guard !isOutBounds else { block(false); return }
+            self._frozenSections = frizeSections
+            self.performBatchUpdates({ self.queuedReloadRows(at: items.map(\.indexPath), with: animation) }, completion: block)
         }
     }
 
