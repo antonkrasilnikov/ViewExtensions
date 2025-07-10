@@ -66,7 +66,9 @@ open class EdgeGradientCollectionView: CollectionView {
     }
 
     deinit {
-        removeObserver(self, forKeyPath:"bounds")
+        if isObserverAdded {
+            removeObserver(self, forKeyPath:"bounds")
+        }
     }
 
     public override func layoutSubviews() {
