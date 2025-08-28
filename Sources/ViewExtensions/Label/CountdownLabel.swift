@@ -7,6 +7,13 @@ public struct CountdownOptions {
     public let color: UIColor
     public let strokeColor: UIColor
     public let strokeWidth: CGFloat
+
+    public init(font: UIFont, color: UIColor, strokeColor: UIColor, strokeWidth: CGFloat) {
+        self.font = font
+        self.color = color
+        self.strokeColor = strokeColor
+        self.strokeWidth = strokeWidth
+    }
 }
 
 open class CountdownLabel: UILabel {
