@@ -2,13 +2,30 @@ import Foundation
 import UIKit
 import Timers
 
+public struct CountdownOptions {
+    public let font: UIFont
+    public let color: UIColor
+    public let strokeColor: UIColor
+    public let strokeWidth: CGFloat
+}
+
 open class CountdownLabel: UILabel {
-    
+    public var options: CountdownOptions?
     private var startValue: Int = 0
     private var currentValue: Int = 0 {
         didSet {
             if oldValue != self.currentValue && self.currentValue >= 0 {
-                self.text = "\(self.currentValue)"
+                if let options {
+                    self.text = nil
+                    self.attributedText = .init(string: "\(self.currentValue)",
+                                                attributes: [.font : options.font,
+                                                             .foregroundColor : options.color,
+                                                             .strokeColor : options.strokeColor,
+                                                             .strokeWidth : options.strokeWidth])
+                }else{
+                    self.attributedText = nil
+                    self.text = "\(self.currentValue)"
+                }
             }
         }
     }
