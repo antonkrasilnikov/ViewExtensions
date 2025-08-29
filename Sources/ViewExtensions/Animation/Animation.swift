@@ -131,12 +131,12 @@ public extension CAAnimation {
     }
 
     fileprivate class func animation(with model: WBWKeyFrameAnimationModel,
-                                 duration: TimeInterval,
-                                 repeatCount: Float = 1,
-                                 removeOnCompletion: Bool = false,
-                                 autoreverses: Bool = false,
-                                 timingFunctionName: CAMediaTimingFunctionName? = nil,
-                                 timingFunctions: [CAMediaTimingFunction]? = nil) -> CAAnimation {
+                                     duration: TimeInterval,
+                                     repeatCount: Float = 1,
+                                     removeOnCompletion: Bool = false,
+                                     autoreverses: Bool = false,
+                                     timingFunctionName: CAMediaTimingFunctionName? = nil,
+                                     timingFunctions: [CAMediaTimingFunction]? = nil) -> CAAnimation {
 
         let animation = self.animation(with: model)
         animation.duration = duration
@@ -300,28 +300,30 @@ open class Animation: NSObject,CAAnimationDelegate  {
     var completionHandler: ((Bool) -> Void)?
     var startHandler: (() -> Void)?
 
-    private init(caAnimation: CAAnimation, layer: CALayer, key: String? = nil, completionHandler: ((Bool) -> Void)? = nil, startHandler: (() -> Void)? = nil) {
+    private init(caAnimation: CAAnimation, delay: TimeInterval = 0, layer: CALayer, key: String? = nil, completionHandler: ((Bool) -> Void)? = nil, startHandler: (() -> Void)? = nil) {
 
         super.init()
 
         self.completionHandler = completionHandler
         self.startHandler = startHandler
-
+        if delay > 0 {
+            caAnimation.beginTime = layer.convertTime(CACurrentMediaTime(), from: nil) + delay
+        }
         caAnimation.delegate = self
         layer.add(caAnimation, forKey: key)
 
     }
 
-    public class func animate(caAnimation: CAAnimation, layer: CALayer, key: String? = nil, completionHandler: ((Bool) -> Void)? = nil, startHandler: (() -> Void)? = nil) {
-        _ = Animation.init(caAnimation: caAnimation, layer: layer, key: key, completionHandler: completionHandler, startHandler: startHandler)
+    public class func animate(caAnimation: CAAnimation, delay: TimeInterval = 0, layer: CALayer, key: String? = nil, completionHandler: ((Bool) -> Void)? = nil, startHandler: (() -> Void)? = nil) {
+        _ = Animation.init(caAnimation: caAnimation, delay: delay, layer: layer, key: key, completionHandler: completionHandler, startHandler: startHandler)
     }
 
-    public class func animate(keyFrames: [CAAnimation.WBWKeyFrameAnimationModel], duration: TimeInterval, layer: CALayer, key: String? = nil, completionHandler: ((Bool) -> Void)? = nil, startHandler: (() -> Void)? = nil) {
-        _ = Animation.init(caAnimation: CAAnimation.groupAnimation(with: keyFrames, duration: duration), layer: layer, key: key, completionHandler: completionHandler, startHandler: startHandler)
+    public class func animate(keyFrames: [CAAnimation.WBWKeyFrameAnimationModel], duration: TimeInterval, delay: TimeInterval = 0, layer: CALayer, key: String? = nil, completionHandler: ((Bool) -> Void)? = nil, startHandler: (() -> Void)? = nil) {
+        _ = Animation.init(caAnimation: CAAnimation.groupAnimation(with: keyFrames, duration: duration), delay: delay, layer: layer, key: key, completionHandler: completionHandler, startHandler: startHandler)
     }
 
-    public class func animate(keyFrame: CAAnimation.WBWKeyFrameAnimationModel, duration: TimeInterval, layer: CALayer, key: String? = nil, completionHandler: ((Bool) -> Void)? = nil, startHandler: (() -> Void)? = nil) {
-        _ = Animation.init(caAnimation: CAAnimation.animation(with: keyFrame, duration: duration), layer: layer, key: key, completionHandler: completionHandler, startHandler: startHandler)
+    public class func animate(keyFrame: CAAnimation.WBWKeyFrameAnimationModel, duration: TimeInterval, delay: TimeInterval = 0, layer: CALayer, key: String? = nil, completionHandler: ((Bool) -> Void)? = nil, startHandler: (() -> Void)? = nil) {
+        _ = Animation.init(caAnimation: CAAnimation.animation(with: keyFrame, duration: duration), delay: delay, layer: layer, key: key, completionHandler: completionHandler, startHandler: startHandler)
     }
 
     public func animationDidStart(_ anim: CAAnimation) {
@@ -372,7 +374,7 @@ public class KeyFrameAnimation: NSObject {
     private var group = DispatchGroup()
     private var animationCompleteFlag = true
 
-    private init(withDuration duration: TimeInterval, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+    private init(withDuration duration: TimeInterval, delay: TimeInterval = 0, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
 
         self.completionHandler = completion
 
@@ -395,7 +397,7 @@ public class KeyFrameAnimation: NSObject {
 
         keyFrames.forEach { keyFrame in
             group.enter()
-            Animation.animate(keyFrame: keyFrame.model, duration: duration, layer: keyFrame.layer, completionHandler: { flag in
+            Animation.animate(keyFrame: keyFrame.model, duration: duration, delay: delay, layer: keyFrame.layer, completionHandler: { flag in
                 self.animationCompleteFlag = self.animationCompleteFlag && flag
                 self.group.leave()
             })
@@ -405,6 +407,7 @@ public class KeyFrameAnimation: NSObject {
             group.enter()
 
             Animation.animate(caAnimation: .opacityAnimation(values: [0,1], duration: perform.time*duration),
+                              delay: delay,
                               layer: {
                 $0.frame = .init(origin: .zero, size: .init(width: 1, height: 1))
                 $0.isUserInteractionEnabled = false
@@ -461,8 +464,8 @@ public class KeyFrameAnimation: NSObject {
         }
     }
 
-    public class func animate(withDuration duration: TimeInterval, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
-        _ = KeyFrameAnimation(withDuration: duration, animations: animations, completion: completion)
+    public class func animate(withDuration duration: TimeInterval, delay: TimeInterval = 0, animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+        _ = KeyFrameAnimation(withDuration: duration, delay: delay, animations: animations, completion: completion)
     }
 
     private class func timeFunctions(timingFunctionName: CAMediaTimingFunctionName?, timingFunctions: [CAMediaTimingFunction]?) -> [CAMediaTimingFunction]? {
