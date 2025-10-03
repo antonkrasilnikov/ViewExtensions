@@ -3,13 +3,13 @@ import UIKit
 
 open class Button: View, LoadibleUIControl {
     
-    public var isInAction: Bool = false {
+    open var isInAction: Bool = false {
         didSet {
             show(isLoading: isInAction)
         }
     }
     
-    public override var isEnabled: Bool {
+    open override var isEnabled: Bool {
         didSet {
             updateColors()
         }
