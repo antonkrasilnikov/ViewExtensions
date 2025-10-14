@@ -84,9 +84,17 @@ private class LoadibleUIMaskView: View {
     static let loadibleTag = 1764
 
     let backView = UIView()
-    let control = LoadControl(animationType: .line)
+    let control: LoadControl
 
-
+    init(animationType: LoadControl.AnimationType) {
+        control = .init(animationType: animationType)
+        super.init()
+    }
+    
+    @MainActor public required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func setup() {
         super.setup()
 
@@ -136,6 +144,9 @@ private class LoadibleUIMaskView: View {
     }
 }
 
+
+private var LoadibleUIControlAssociatedKeyLoadingAnimationType: UInt8 = 0
+
 extension LoadibleUIControl {
 
     private func _loadibleMaskView() -> LoadibleUIMaskView {
@@ -145,7 +156,7 @@ extension LoadibleUIControl {
             return control
         }
 
-        let control = LoadibleUIMaskView()
+        let control = LoadibleUIMaskView(animationType: loadingAnimationType)
         addSubview(control)
         control.autoPinEdgesToSuperviewEdges()
 
@@ -155,5 +166,17 @@ extension LoadibleUIControl {
 
     public func show(isLoading: Bool) {
         _loadibleMaskView().isLoading = isLoading
+    }
+
+    public var loadingAnimationType: LoadControl.AnimationType {
+        get {
+            guard let value = objc_getAssociatedObject(self, &LoadibleUIControlAssociatedKeyLoadingAnimationType) as? String else {
+                return .line
+            }
+            return .init(rawValue: value) ?? .line
+        }
+        set {
+            objc_setAssociatedObject(self, &LoadibleUIControlAssociatedKeyLoadingAnimationType, newValue.rawValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 }

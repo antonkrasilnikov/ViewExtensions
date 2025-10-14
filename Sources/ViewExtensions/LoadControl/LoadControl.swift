@@ -9,7 +9,7 @@ public protocol LoadView: View {
 
 open class LoadControl: View {
 
-    public enum AnimationType {
+    public enum AnimationType: String {
         case system
         case square
         case line
