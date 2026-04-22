@@ -32,9 +32,7 @@ open class CountLabel: UILabel {
     }
     
     private func animate() {
-        
         startTs = INC_SystemUptime.uptime()
-        
         addLink()
     }
     

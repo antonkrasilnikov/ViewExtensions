@@ -31,9 +31,7 @@ public extension UIColor {
         var g: CGFloat = 0
         var b: CGFloat = 0
         var a: CGFloat = 0
-        
         self.getRed(&r, green: &g, blue: &b, alpha: &a)
-        
         return String.init(format: "#%02lX%02lX%02lX", Int(r * 255), Int(g * 255), Int(b * 255))
     }
 }

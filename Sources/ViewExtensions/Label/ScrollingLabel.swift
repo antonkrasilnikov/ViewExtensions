@@ -21,7 +21,6 @@ open class ScrollingLabelView: View, UIScrollViewDelegate {
         scrollView.delegate = self
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
-        
         scrollView.addSubview(label)
     }
     

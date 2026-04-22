@@ -59,7 +59,6 @@ public class TextPopover: View {
                     self.appearanceState = .presented
                 }
             }
-            
         }
     }
     
@@ -91,10 +90,8 @@ public class TextPopover: View {
     }
     
     public func close(animated: Bool) {
-        
         if appearanceState != .dismissing {
             appearanceState = .dismissing
-            
             if animated {
                 UIView.animate(withDuration: 0.1, animations: {
                     self.alpha = 0
@@ -106,7 +103,6 @@ public class TextPopover: View {
                 self.appearanceState = .none
                 self.removeFromSuperview()
             }
-            
         }
     }
     
@@ -161,8 +157,5 @@ public class TextPopover: View {
         }else{
             backLayer.path = nil
         }
-        
-        
     }
-    
 }

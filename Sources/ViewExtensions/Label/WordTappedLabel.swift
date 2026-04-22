@@ -42,12 +42,10 @@ public class WordTappedLabel: OnDrawAnimatedView {
             }
             setNeedsDisplay()
         }
-        
     }
     
     public override func setup() {
         self.backgroundColor = .clear
-        
     }
     
     public override func draw(_ rect: CGRect) {

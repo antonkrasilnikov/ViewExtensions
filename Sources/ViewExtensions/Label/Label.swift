@@ -10,11 +10,9 @@ public extension UILabel {
         let a = (fontSize2 - fontSize1)/(size2 - size1)
         let b = fontSize1 - a*size1
         var f = a*size + b
-        
         if let maxFontSize = maxFontSize, f > maxFontSize {
             f = maxFontSize
         }
-        
         setFontSize(f)
     }
 }

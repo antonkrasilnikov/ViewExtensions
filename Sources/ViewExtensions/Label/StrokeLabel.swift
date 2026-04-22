@@ -54,7 +54,6 @@ open class OutStrokeTextView: View {
         }
         
         context.saveGState()
-        
 
         // Outline width
         context.setLineWidth(self.strokeWidth);
@@ -75,7 +74,6 @@ open class OutStrokeTextView: View {
         context.scaleBy(x: 1.0, y: -1.0)
         
         context.restoreGState()
-
         label.textColor = originalColor
     }
     

@@ -40,17 +40,13 @@ public extension UIColor {
             startPoint = .zero
             endPoint = .zero
         }
-        
-        
         context?.drawLinearGradient(gradient, start: startPoint!, end: endPoint!, options:CGGradientDrawingOptions.init(rawValue: 0) )
         
         guard let image = UIGraphicsGetImageFromCurrentImageContext() else {
             UIGraphicsEndImageContext()
             return nil
         }
-        
         UIGraphicsEndImageContext()
-        
         return UIColor.init(patternImage: image)
     }
 }

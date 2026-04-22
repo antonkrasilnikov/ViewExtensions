@@ -63,14 +63,11 @@ public class DetailButton: Button {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        
         shapeLayer.frame = bounds
-        
         let path = UIBezierPath()
         path.move(to: .zero)
         path.addLine(to: .init(x: bounds.width - shapeLayer.lineWidth/2, y: bounds.height/2))
         path.addLine(to: .init(x: 0, y: bounds.height))
-        
         shapeLayer.path = path.cgPath
     }
 }
@@ -134,7 +131,6 @@ private class LoadibleUIMaskView: View {
 
     private func _updateMask() {
         guard superview != nil, !isHidden, bounds.size.width > 0, bounds.size.height > 0 else { return }
-
         isHidden = true
         if let snapshot = superview?.snapshotView(afterScreenUpdates: true) {
             snapshot.frame = bounds
@@ -144,24 +140,19 @@ private class LoadibleUIMaskView: View {
     }
 }
 
-
 private var LoadibleUIControlAssociatedKeyLoadingAnimationType: UInt8 = 0
 
 extension LoadibleUIControl {
 
     private func _loadibleMaskView() -> LoadibleUIMaskView {
-
         if let control = subviews.first(where: { $0.tag == LoadibleUIMaskView.loadibleTag }) as? LoadibleUIMaskView {
             bringSubviewToFront(control)
             return control
         }
-
         let control = LoadibleUIMaskView(animationType: loadingAnimationType)
         addSubview(control)
         control.autoPinEdgesToSuperviewEdges()
-
         return control
-
     }
 
     public func show(isLoading: Bool) {

@@ -71,7 +71,6 @@ class Interface {
     }
     
     class var safeAreaInsets: UIEdgeInsets {
-        
         if #available(iOS 11.0, *) {
             if let window = UIApplication.shared.keyWindow {
                 return window.safeAreaInsets
