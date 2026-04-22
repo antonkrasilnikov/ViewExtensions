@@ -25,14 +25,6 @@ It provides:
 
 ---
 
-## 📦 Installation (Swift Package Manager)
-
-```swift
-.package(url: "https://github.com/yourname/TableView.git", from: "1.0.0")
-```
-
----
-
 ## 🚀 Quick Start
 
 ### 1. Create items
