@@ -13,6 +13,7 @@ class LayoutCircleChecker: NSObject {
     private var requestCount = 0
     private var isCircleWarning: Bool { requestCount > 5 }
 
+    public
     func apply(layout: @MainActor () -> Void) {
         guard !isCircleWarning else {
 #if DEBUG
