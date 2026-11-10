@@ -26,6 +26,7 @@ open class View: UIControl, UserInterface {
     }
 
     public var touchPadding: CGFloat = 0
+    public lazy var layoutCircleChecker = LayoutCircleChecker()
 
     public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
       let extendedBounds = bounds.insetBy(dx: -touchPadding, dy: -touchPadding)
