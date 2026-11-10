@@ -14,7 +14,12 @@ class LayoutCircleChecker: NSObject {
     private var isCircleWarning: Bool { requestCount > 5 }
 
     func apply(layout: @MainActor () -> Void) {
-        guard !isCircleWarning else { return }
+        guard !isCircleWarning else {
+#if DEBUG
+            print("View warning: potential layout circle in \(type(of: self))")
+#endif
+            return
+        }
         requestCount += 1
         layout()
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(finish), object: nil)
