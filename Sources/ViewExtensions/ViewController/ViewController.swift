@@ -11,7 +11,8 @@ open class ViewController: UIViewController,UserInterface {
         $0.isSuspended = true
         return $0
     }(OperationQueue())
-    
+    private var resetableConstraints: [NSLayoutConstraint] = []
+
     public init() {
         super.init(nibName: nil, bundle: nil)
     }
@@ -41,7 +42,12 @@ open class ViewController: UIViewController,UserInterface {
         super.viewDidDisappear(animated)
         appearanceQueue.isSuspended = true
     }
-    
+
+    open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: { _ in }) { [weak self] _ in self?.setResetableConstraints() }
+    }
+
     open override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -60,5 +66,15 @@ open class ViewController: UIViewController,UserInterface {
     
     open func setupSizes() {
         
+    }
+
+    @ConstraintsBuilder
+    open func buildTransitionalConstraints() -> [NSLayoutConstraint] {}
+
+    private
+    func setResetableConstraints() {
+        resetableConstraints.forEach({ $0.isActive = false })
+        resetableConstraints.removeAll()
+        resetableConstraints.append(contentsOf: buildTransitionalConstraints())
     }
 }
