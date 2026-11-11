@@ -45,7 +45,10 @@ open class ViewController: UIViewController,UserInterface {
 
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate(alongsideTransition: { _ in }) { [weak self] _ in self?.setResetableConstraints() }
+        coordinator.animate(alongsideTransition: { _ in }) { [weak self] _ in
+            self?.setResetableConstraints()
+            self?.viewDidTransition()
+        }
     }
 
     open override var prefersStatusBarHidden: Bool {
@@ -65,11 +68,14 @@ open class ViewController: UIViewController,UserInterface {
     }
     
     open func setupSizes() {
-        
+        setResetableConstraints()
     }
 
     @ConstraintsBuilder
     open func buildTransitionalConstraints() -> [NSLayoutConstraint] {}
+
+    open
+    func viewDidTransition() {}
 
     private
     func setResetableConstraints() {

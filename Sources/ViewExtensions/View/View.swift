@@ -27,6 +27,7 @@ open class View: UIControl, UserInterface {
 
     public var touchPadding: CGFloat = 0
     public lazy var layoutCircleChecker = LayoutCircleChecker()
+    private var resetableConstraints: [NSLayoutConstraint] = []
 
     public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
       let extendedBounds = bounds.insetBy(dx: -touchPadding, dy: -touchPadding)
@@ -47,7 +48,17 @@ open class View: UIControl, UserInterface {
     }
 
     open func setupSizes() {
+        updateResetableConstraints()
+    }
 
+    @ConstraintsBuilder
+    open func buildTransitionalConstraints() -> [NSLayoutConstraint] {}
+
+    open
+    func updateResetableConstraints() {
+        resetableConstraints.forEach({ $0.isActive = false })
+        resetableConstraints.removeAll()
+        resetableConstraints.append(contentsOf: buildTransitionalConstraints())
     }
 
     @objc
